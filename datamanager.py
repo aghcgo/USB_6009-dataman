@@ -5,6 +5,8 @@ import pandas as pd
 from pylab import *
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+import datetime
+import time
 
 class Dataman:
 
@@ -126,9 +128,13 @@ class Dataman:
         with open(filename+extensao) as file:
             spam = csv.reader(file, delimiter=',')
             value = []
+            self.pmu_time = []
             for j,row in enumerate(spam):
                 if j != 0:
                     value.append(float(row[1]))
+                    pmu_time = float(row[0])/1000
+                    pmu_time = datetime.datetime.fromtimestamp(pmu_time)
+                    self.pmu_time.append(pmu_time)
         return value
 
     def plot_graph_rmsXcurrent(self, file_volt1, file_volt2, file_volt3, file_curr1, file_curr2, file_curr3):
@@ -187,9 +193,50 @@ class Dataman:
         fig.update_yaxes(title_text="<b>RMS Voltage</b> Volts [V]", secondary_y=False)
         fig.update_yaxes(title_text="<b>Current Phase</b> Ampere [A]", secondary_y=True)
         fig.show()
+        
+    def plot_graph_current(self, file_curr1, file_curr2, file_curr3, points):
+        curr1_pmu = self.read_pmu_file(file_curr1)
+        curr2_pmu = self.read_pmu_file(file_curr2)
+        curr3_pmu = self.read_pmu_file(file_curr3)
 
-    def plot_phase(self, file_pmu_curr):
-        curr_pmu = self.adjust_data(self.volt_rms()[0], self.read_pmu_file(file_pmu_curr))
+        data_current1 = self.adjust_data(self.volt_rms()[0], curr1_pmu, points)
+        data_current2 = self.adjust_data(self.volt_rms()[0], curr2_pmu, points)
+        data_current3 = self.adjust_data(self.volt_rms()[0], curr3_pmu, points)
+
+        tam_ax = len(self.volt_rms()[0])
+
+        # Create figure with secondary y-axis
+        fig = make_subplots(specs=[[{"secondary_y": True}]])
+        # Add traces
+        fig.add_trace(
+            go.Scatter(x=np.arange(tam_ax), y=self.volt_rms()[0], name="RMS Voltage"),
+            secondary_y=False,
+        )
+        fig.add_trace(
+            go.Scatter(x=np.arange(tam_ax), y=data_current1, name="Current P1"),
+            secondary_y=True,
+        )
+        fig.add_trace(
+            go.Scatter(x=np.arange(tam_ax), y=data_current2, name="Current P2"),
+            secondary_y=True,
+        )
+        fig.add_trace(
+            go.Scatter(x=np.arange(tam_ax), y=data_current3, name="Current P3"),
+            secondary_y=True,
+        )
+        # Add figure title
+        fig.update_layout(
+            title_text="RMS Voltage x Current Phase"
+        )
+        # Set x-axis title
+        fig.update_xaxes(title_text="Time [s]")
+        # Set y-axes titles
+        fig.update_yaxes(title_text="<b>RMS Voltage</b> Volts [V]", secondary_y=False)
+        fig.update_yaxes(title_text="<b>Current Phase</b> Ampere [A]", secondary_y=True)
+        fig.show()
+
+    def plot_phase(self, file_pmu_curr, points):
+        curr_pmu = self.adjust_data(self.volt_rms()[0], self.read_pmu_file(file_pmu_curr), points)
 
         tam_ax = len(self.volt_rms()[0])
 
@@ -205,7 +252,7 @@ class Dataman:
             secondary_y=False,
         )
         fig.add_trace(
-            go.Scatter(x=np.arange(tam_ax), y=curr_pmu, name="Current PMU P2"),
+            go.Scatter(x=np.arange(tam_ax), y=curr_pmu, name="Current P2"),
             secondary_y=True,
         )
         # Add figure title
@@ -219,7 +266,7 @@ class Dataman:
         fig.update_yaxes(title_text="<b>Current Phase</b> Ampere [A]", secondary_y=True)
         fig.show()
 
-    def adjust_data(self, data_ref, data_adj):
+    def adjust_data(self, data_ref, data_adj, dots):
         '''
         Calc to adapt the 2 graphs
         Calcula numero de pontos maximos para que seja possivel plotar os 2 graficos
@@ -242,10 +289,13 @@ class Dataman:
         '''
         tam_ref = len(data_ref)
         tam_adj = len(data_adj)
+        
+
         if (tam_ref - tam_adj) > (tam_ref*0.01):
-            points = tam_ref
-            res_points = points / tam_adj
-            res_points = np.ceil(res_points)        # Arredonda para o teto
+            #points = tam_ref
+            res_points = dots    # dots segundos -> 1 segundo
+            #res_points = points / tam_adj +1
+            #res_points = np.ceil(res_points)        # Arredonda para o teto
             data_adjusted = []
             for i in range(1, tam_adj):
                 y = data_adj[i]
@@ -257,6 +307,23 @@ class Dataman:
                     data_adjusted.append(m * ((k+1) * (x - xo) / res_points) + yo)
         else:
             return data_adj
+
+        '''
+        if (tam_ref - tam_adj) > (tam_ref*0.01):
+            points = tam_ref
+            res_points = points / tam_adj
+            res_points = np.ceil(res_points)        # Arredonda para o teto
+            data_adjusted = []
+            for i in range(1, tam_adj):
+                y = data_adj[i]
+                yo = data_adj[i-1]
+                reta = np.arange(yo, y, res_points)
+                for k in range(len(reta)):
+                    data_adjusted.append(reta[k])
+        else:
+            return data_adj
+        '''
+        
         return data_adjusted
 
     def plot_2graphs(self, data1, data2):
