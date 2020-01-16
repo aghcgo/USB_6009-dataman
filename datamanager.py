@@ -137,18 +137,18 @@ class Dataman:
                     self.pmu_time.append(pmu_time)
         return value
 
-    def plot_graph_rmsXcurrent(self, file_volt1, file_volt2, file_volt3, file_curr1, file_curr2, file_curr3):
+    def plot_graph_rmsXcurrent(self, file_volt1, file_volt2, file_volt3, points_volt, file_curr1, file_curr2, file_curr3, points_curr):
         curr1_pmu = self.read_pmu_file(file_curr1)
         curr2_pmu = self.read_pmu_file(file_curr2)
         curr3_pmu = self.read_pmu_file(file_curr3)
 
-        pmu_volt1 = self.adjust_data(self.volt_rms()[0], self.read_pmu_file(file_volt1))
-        pmu_volt2 = self.adjust_data(self.volt_rms()[0], self.read_pmu_file(file_volt2))
-        pmu_volt3 = self.adjust_data(self.volt_rms()[0], self.read_pmu_file(file_volt3))
+        pmu_volt1 = self.adjust_data(self.volt_rms()[0], self.read_pmu_file(file_volt1), points_volt)
+        pmu_volt2 = self.adjust_data(self.volt_rms()[0], self.read_pmu_file(file_volt2), points_volt)
+        pmu_volt3 = self.adjust_data(self.volt_rms()[0], self.read_pmu_file(file_volt3), points_volt)
 
-        data_current1 = self.adjust_data(self.volt_rms()[0], curr1_pmu)
-        data_current2 = self.adjust_data(self.volt_rms()[0], curr2_pmu)
-        data_current3 = self.adjust_data(self.volt_rms()[0], curr3_pmu)
+        data_current1 = self.adjust_data(self.volt_rms()[0], curr1_pmu, points_curr)
+        data_current2 = self.adjust_data(self.volt_rms()[0], curr2_pmu, points_curr)
+        data_current3 = self.adjust_data(self.volt_rms()[0], curr3_pmu, points_curr)
 
         tam_ax = len(self.volt_rms()[0])
 
@@ -235,6 +235,47 @@ class Dataman:
         fig.update_yaxes(title_text="<b>Current Phase</b> Ampere [A]", secondary_y=True)
         fig.show()
 
+    def plot_graph_voltage(self, file_v1, file_v2, file_v3, points):
+        volt1_pmu = self.read_pmu_file(file_v1)
+        volt2_pmu = self.read_pmu_file(file_v2)
+        volt3_pmu = self.read_pmu_file(file_v3)
+
+        data_volt1 = self.adjust_data(self.volt_rms()[0], volt1_pmu, points)
+        data_volt2 = self.adjust_data(self.volt_rms()[0], volt2_pmu, points)
+        data_volt3 = self.adjust_data(self.volt_rms()[0], volt3_pmu, points)
+
+        tam_ax = len(self.volt_rms()[0])
+
+        # Create figure with secondary y-axis
+        fig = make_subplots(specs=[[{"secondary_y": True}]])
+        # Add traces
+        fig.add_trace(
+            go.Scatter(x=np.arange(tam_ax), y=self.volt_rms()[0], name="RMS Voltage"),
+            secondary_y=False,
+        )
+        fig.add_trace(
+            go.Scatter(x=np.arange(tam_ax), y=data_volt1, name="Voltage P1"),
+            secondary_y=True,
+        )
+        fig.add_trace(
+            go.Scatter(x=np.arange(tam_ax), y=data_volt2, name="Voltage P2"),
+            secondary_y=True,
+        )
+        fig.add_trace(
+            go.Scatter(x=np.arange(tam_ax), y=data_volt3, name="Voltage P3"),
+            secondary_y=True,
+        )
+        # Add figure title
+        fig.update_layout(
+            title_text="RMS Voltage x Mult/PMU Voltage"
+        )
+        # Set x-axis title
+        fig.update_xaxes(title_text="Time [s]")
+        # Set y-axes titles
+        fig.update_yaxes(title_text="<b>RMS Voltage</b> Volts [V]", secondary_y=False)
+        fig.update_yaxes(title_text="<b>Current Phase</b> Ampere [A]", secondary_y=True)
+        fig.show()
+        
     def plot_phase(self, file_pmu_curr, points):
         curr_pmu = self.adjust_data(self.volt_rms()[0], self.read_pmu_file(file_pmu_curr), points)
 
@@ -326,7 +367,7 @@ class Dataman:
         
         return data_adjusted
 
-    def plot_2graphs(self, data1, data2):
+    def plot_2graphs(self, data1, data2, points):
         # Plot 2 graphs
 
         if len(data1) > len(data2):
@@ -336,7 +377,7 @@ class Dataman:
             data_ref = data2
             data_adj = data1
 
-        data_adjusted = self.adjust_data(data_ref, data_adj)
+        data_adjusted = self.adjust_data(data_ref, data_adj, points)
 
         # Create figure with secondary y-axis
         fig = make_subplots(specs=[[{"secondary_y": True}]])
