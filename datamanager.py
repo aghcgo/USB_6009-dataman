@@ -160,27 +160,27 @@ class Dataman:
             secondary_y=False,
         )
         fig.add_trace(
-            go.Scatter(x=np.arange(tam_ax), y=pmu_volt1, name="Voltage PMU P1"),
+            go.Scatter(x=np.arange(tam_ax), y=pmu_volt1, name="Voltage PMU L1"),
             secondary_y=False,
         )
         fig.add_trace(
-            go.Scatter(x=np.arange(tam_ax), y=pmu_volt2, name="Voltage PMU P2"),
+            go.Scatter(x=np.arange(tam_ax), y=pmu_volt2, name="Voltage PMU L2"),
             secondary_y=False,
         )
         fig.add_trace(
-            go.Scatter(x=np.arange(tam_ax), y=pmu_volt3, name="Voltage PMU P3"),
+            go.Scatter(x=np.arange(tam_ax), y=pmu_volt3, name="Voltage PMU L3"),
             secondary_y=False,
         )
         fig.add_trace(
-            go.Scatter(x=np.arange(tam_ax), y=data_current1, name="Current P1"),
+            go.Scatter(x=np.arange(tam_ax), y=data_current1, name="Current L1"),
             secondary_y=True,
         )
         fig.add_trace(
-            go.Scatter(x=np.arange(tam_ax), y=data_current2, name="Current P2"),
+            go.Scatter(x=np.arange(tam_ax), y=data_current2, name="Current L2"),
             secondary_y=True,
         )
         fig.add_trace(
-            go.Scatter(x=np.arange(tam_ax), y=data_current3, name="Current P3"),
+            go.Scatter(x=np.arange(tam_ax), y=data_current3, name="Current L3"),
             secondary_y=True,
         )
         # Add figure title
@@ -213,15 +213,15 @@ class Dataman:
             secondary_y=False,
         )
         fig.add_trace(
-            go.Scatter(x=np.arange(tam_ax), y=data_current1, name="Current P1"),
+            go.Scatter(x=np.arange(tam_ax), y=data_current1, name="Current L1"),
             secondary_y=True,
         )
         fig.add_trace(
-            go.Scatter(x=np.arange(tam_ax), y=data_current2, name="Current P2"),
+            go.Scatter(x=np.arange(tam_ax), y=data_current2, name="Current L2"),
             secondary_y=True,
         )
         fig.add_trace(
-            go.Scatter(x=np.arange(tam_ax), y=data_current3, name="Current P3"),
+            go.Scatter(x=np.arange(tam_ax), y=data_current3, name="Current L3"),
             secondary_y=True,
         )
         # Add figure title
@@ -254,15 +254,15 @@ class Dataman:
             secondary_y=False,
         )
         fig.add_trace(
-            go.Scatter(x=np.arange(tam_ax), y=data_volt1, name="Voltage P1"),
+            go.Scatter(x=np.arange(tam_ax), y=data_volt1, name="Voltage L1"),
             secondary_y=True,
         )
         fig.add_trace(
-            go.Scatter(x=np.arange(tam_ax), y=data_volt2, name="Voltage P2"),
+            go.Scatter(x=np.arange(tam_ax), y=data_volt2, name="Voltage L2"),
             secondary_y=True,
         )
         fig.add_trace(
-            go.Scatter(x=np.arange(tam_ax), y=data_volt3, name="Voltage P3"),
+            go.Scatter(x=np.arange(tam_ax), y=data_volt3, name="Voltage L3"),
             secondary_y=True,
         )
         # Add figure title
@@ -293,7 +293,7 @@ class Dataman:
             secondary_y=False,
         )
         fig.add_trace(
-            go.Scatter(x=np.arange(tam_ax), y=curr_pmu, name="Current P2"),
+            go.Scatter(x=np.arange(tam_ax), y=curr_pmu, name="Current L2"),
             secondary_y=True,
         )
         # Add figure title
