@@ -8,6 +8,15 @@ from plotly.subplots import make_subplots
 import datetime
 import time
 
+# DataManager
+
+__author__ = "Diego R. Garzaro"
+__copyright__ = "Copyright 2020"
+__version__ = "1.0"
+__status__ = "Production"
+
+class DatamanMChannel:
+
 class Dataman:
 
     def __init__(self, filename):
