@@ -1,3 +1,21 @@
+import csv
+import numpy as np
+import pandas as pd
+#from matplotlib import pyplot as plt
+from pylab import *
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+import datetime
+import time
+import json
+import requests as r
+import datetime #datetime.datetime().totimestamp()
+
+# Definitions
+ID_VOLT_PMU_EFC = [499, 501, 503]          # Fase 1, Fase 2 e Fase 3
+ID_VOLT_MULTPK = [7247, 7248, 7249]        # Fase 1, Fase 2 e Fase 3
+ID_CURRENT_MULTPK = [7252, 7253, 7254]     # Fase 1, Fase 2 e Fase 3
+
 # DataManager With Multiple Channels
 
 __author__ = "Diego R. Garzaro"
@@ -122,7 +140,7 @@ class DatamanMChannel:
         end = start + self.aq_time + 2*60 # Coleta até 2 minutos após o término da aquisição
         interval = 1
         #ID = 499 # Fase 1 - PMU (Eficiencia - Vega)
-        url='https://vega.eletrica.ufpr.br/emoncms/feed/data.json?id=%s&start=%s&end=%s&interval=%s&apikey=cd88a88b39fb2e7c1dcbfe088ed1ebf7'%(ID,start,end,interval)
+        url='url'
         s=r.get(url)
         #print(s)
         values = json.loads(s.text)
